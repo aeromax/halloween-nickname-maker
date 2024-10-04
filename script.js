@@ -2,13 +2,14 @@ const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-list");
 const deleteChatButton = document.querySelector("#delete-chat-button");
 
+
 // State variables
-let userMessage = null;
+let userMessage = new Object;
 let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = 'http://127.0.0.1:3000/generate';
+const API_URL = 'http://127.0.0.1:3000/generate-nickname';
 
 // Load theme and chat data from local storage on page load
 const loadDataFromLocalstorage = () => {
@@ -63,23 +64,28 @@ const generateAPIResponse = async incomingMessageDiv => {
 				contents: [
 					{
 						role: "user",
-						parts: [{text: userMessage}],
+						parts: [{
+							name: userMessage.name,
+							costume: userMessage.costume,
+						}],
 					},
 				],
 			}),
 		});
-
 		const data = await response.json();
 		if (!response.ok) throw new Error(data.error.message);
 
 		// Get the API response text and remove asterisks from it
-		const apiResponse = data?.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
-		showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
+		console.log(data);
+		// const apiResponse = data?.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
+		const apiResponse = data[0];
+		// showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
 	} catch (error) {
 		// Handle error
 		isResponseGenerating = false;
-		textElement.innerText = error.message;
-		textElement.parentElement.closest(".message").classList.add("error");
+		textElement.innerText = error;
+		console.log(error);
+		textElement.parentElement.closest(".message").classList.add("error.message");
 	} finally {
 		incomingMessageDiv.classList.remove("loading");
 	}
@@ -105,15 +111,15 @@ const showLoadingAnimation = () => {
 	generateAPIResponse(incomingMessageDiv);
 };
 
-// Copy message text to the clipboard
 
 // Handle sending outgoing chat messages
 const handleOutgoingChat = () => {
+
 	const nameField = document.querySelector("#nameField").value;
 	const costumeField = document.querySelector("#costumeField").value;
-	console.log(nameField, costumeField);
-
-	userMessage = "My name is " + nameField.trim() + " and I am dressed as " + costumeField.trim() + ". " || userMessage;
+	// userMessage = "My name is " + nameField.trim() + " and I am dressed as " + costumeField.trim() + ". " || userMessage;
+	userMessage.name=nameField.trim();
+	userMessage.costume=costumeField.trim();
 	if (!userMessage || isResponseGenerating) return; // Exit if there is no message or response is generating
 
 	isResponseGenerating = true;
@@ -123,11 +129,11 @@ const handleOutgoingChat = () => {
                 </div>`;
 
 	const outgoingMessageDiv = createMessageElement(html, "outgoing");
-	// outgoingMessageDiv.querySelector(".text").innerText = userMessage;
+	outgoingMessageDiv.querySelector(".text").innerText = userMessage;
 	chatContainer.appendChild(outgoingMessageDiv);
 
 	typingForm.reset(); // Clear input field
-	document.body.classList.add("hide-header");
+	// document.body.classList.add("hide-header");
 	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 	setTimeout(showLoadingAnimation, 500); // Show loading animation after a delay
 };
