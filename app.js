@@ -43,3 +43,4 @@ app.post("/generate-nickname", async (req, res) => {
 });
 
 
+ module.exports = app;
