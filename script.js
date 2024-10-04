@@ -76,10 +76,10 @@ const generateAPIResponse = async incomingMessageDiv => {
 		if (!response.ok) throw new Error(data.error.message);
 
 		// Get the API response text and remove asterisks from it
-		console.log(data);
 		// const apiResponse = data?.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
-		const apiResponse = data[0];
-		// showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
+		const apiResponse = data.nickname;
+		console.log(data.nickname);
+		showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
 	} catch (error) {
 		// Handle error
 		isResponseGenerating = false;
