@@ -2,6 +2,11 @@ const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-list");
 const deleteChatButton = document.querySelector("#delete-chat-button");
 
+const nameField = document.querySelector("#nameField");
+const costumeField = document.querySelector("#costumeField");
+
+let firstName = nameField.value;
+let costume = costumeField.value;
 
 // State variables
 let userMessage = new Object;
@@ -54,9 +59,11 @@ const showTypingEffect = (text, textElement, incomingMessageDiv) => {
 // Fetch response from the API based on user message
 const generateAPIResponse = async incomingMessageDiv => {
 	const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
+	const requestString = `My name is ${firstName} and I am dressed up as a ${costume}. Create a spooky nickname for me that's creative and fun!`;
 
 	try {
 		// Send a POST request to the API with the user's message
+		console.log(requestString);
 		const response = await fetch(API_URL, {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
@@ -64,10 +71,12 @@ const generateAPIResponse = async incomingMessageDiv => {
 				contents: [
 					{
 						role: "user",
-						parts: [{
-							name: userMessage.name,
-							costume: userMessage.costume,
-						}],
+						parts: [
+							{
+								name: firstName,
+								costume: costume,
+							},
+						],
 					},
 				],
 			}),
@@ -84,7 +93,7 @@ const generateAPIResponse = async incomingMessageDiv => {
 		// Handle error
 		isResponseGenerating = false;
 		textElement.innerText = error;
-		console.log(error);
+		console.log(error.message);
 		textElement.parentElement.closest(".message").classList.add("error.message");
 	} finally {
 		incomingMessageDiv.classList.remove("loading");
@@ -114,12 +123,10 @@ const showLoadingAnimation = () => {
 
 // Handle sending outgoing chat messages
 const handleOutgoingChat = () => {
-
-	const nameField = document.querySelector("#nameField").value;
-	const costumeField = document.querySelector("#costumeField").value;
+	firstName = nameField.value;
+	costume = costumeField.value;
 	// userMessage = "My name is " + nameField.trim() + " and I am dressed as " + costumeField.trim() + ". " || userMessage;
-	userMessage.name=nameField.trim();
-	userMessage.costume=costumeField.trim();
+	
 	if (!userMessage || isResponseGenerating) return; // Exit if there is no message or response is generating
 
 	isResponseGenerating = true;

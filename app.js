@@ -3,11 +3,10 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const {GoogleGenerativeAI} = require("@google/generative-ai");
-
+const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-
 
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
@@ -28,21 +27,38 @@ const generationConfig = {
 };
 // POST endpoint to generate nickname
 app.post("/generate-nickname", async (req, res) => {
+
 	try {
-		const {name, costume, sessionId} = req.body;
-		if (!sessionHistory[sessionId]) {
-			sessionHistory[sessionId] = [];
+		// Destructure `name` and `costume` from the request body (assuming client sends in contents)
+		const {name, costume} = req.body.contents[0].parts[0];
+
+		// Create a unique session ID
+		let currentSessionId = uuidv4();
+		// Store session history if it doesn't exist for the session
+		if (!sessionHistory[currentSessionId]) {
+			sessionHistory[currentSessionId] = [];
 		}
-		const message = req.body.contents[0].parts[0];
-		const prompt = `My name is ${message.name} and I am dressed up as a ${message.costume}. Create a spooky nickname for me that's creative and fun!`;
+
+		// Create the prompt string based on the `name` and `costume`
+		const prompt = `My name is ${name} and I am dressed up as a ${costume}. Create a spooky nickname for me that's creative and fun!`;
+
+		// Append this interaction to the session history (if needed later for more context)
+		sessionHistory[currentSessionId].push({
+			role: "user",
+			parts: [{content: prompt}],
+		});
+
 		const chatSession = model.startChat({
 			generationConfig,
-			history: sessionHistory[sessionId],
+			history: sessionHistory[currentSessionId],
 		});
-		const result = await chatSession.sendMessage(prompt);
+		const result = await model.generateContent(prompt);
 		const nickname = await result.response.text();
-		// Append the current interaction to the session history
-		sessionHistory[sessionId].push({prompt, response: nickname});
+		// Store model response with model role
+		sessionHistory[currentSessionId].push({
+			role: "model",
+			parts: [{name: name, costume: costume}],
+		});
 		res.status(200).json({nickname});
 	} catch (error) {
 		console.error("Error generating nickname:", error);
@@ -50,5 +66,4 @@ app.post("/generate-nickname", async (req, res) => {
 	}
 });
 
-
- module.exports = app;
+module.exports = app;
