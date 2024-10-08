@@ -4,29 +4,43 @@ const deleteChatButton = document.querySelector("#delete-chat-button");
 
 const nameField = document.querySelector("#nameField");
 const costumeField = document.querySelector("#costumeField");
-
-let firstName = nameField.value;
-let costume = costumeField.value;
+let firstName;
+let costume;
 
 // State variables
-let userMessage = new Object;
+let userMessage = new Object();
 let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = 'http://127.0.0.1:3000/generate-nickname';
+const API_URL = "http://localhost:3000/generate-nickname";
 
-// Load theme and chat data from local storage on page load
-const loadDataFromLocalstorage = () => {
-	const savedChats = localStorage.getItem("saved-chats");
-
-	// Restore saved chats or clear the chat container
-	chatContainer.innerHTML = savedChats || "";
-	document.body.classList.toggle("hide-header", savedChats);
-
-	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+// Load chat history from server
+const loadChatHistory = async () => {
+	try {
+		const response = await fetch("http://localhost:3000/log", {
+			method: "GET",
+			headers: {"Content-Type": "application/json"},
+		});
+		if (!response.ok) throw new Error("Failed to fetch log data");
+		const logData = await response.json();
+		const entries = logData.sessionHistory;
+		const html = `<div class="message-content">
+		<p class="text"></p>
+                </div>`;
+		if (entries.length > 0) {
+			for (const entry of entries) {
+				const message = entries[entry][1].parts[0].result;
+				const div = createMessageElement(html);
+				div.querySelector(".text").append(message);
+				chatContainer.appendChild(div);
+			}
+		}
+		if (!response.ok) throw new Error(data.error);
+	} catch (error) {
+		console.log(error);
+	}
 };
-
 // Create a new message element and return it
 const createMessageElement = (content, ...classes) => {
 	const div = document.createElement("div");
@@ -59,31 +73,25 @@ const showTypingEffect = (text, textElement, incomingMessageDiv) => {
 // Fetch response from the API based on user message
 const generateAPIResponse = async incomingMessageDiv => {
 	const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
-	const requestString = `My name is ${firstName} and I am dressed up as a ${costume}. Create a spooky nickname for me that's creative and fun!`;
 
 	try {
 		// Send a POST request to the API with the user's message
-		console.log(requestString);
 		const response = await fetch(API_URL, {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify({
-				contents: [
-					{
-						role: "user",
-						parts: [
-							{
-								name: firstName,
-								costume: costume,
-							},
-						],
-					},
-				],
+				name: firstName,
+				costume: costume,
 			}),
 		});
-		const data = await response.json();
-		if (!response.ok) throw new Error(data.error.message);
 
+		if (!response.ok) {
+			throw new Error("Failed to fetch nickname.");
+		}
+		const data = await response.json();
+
+		if (!response.ok) throw new Error(data.error.message);
+		loadChatHistory();
 		// Get the API response text and remove asterisks from it
 		// const apiResponse = data?.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
 		const apiResponse = data.nickname;
@@ -120,24 +128,18 @@ const showLoadingAnimation = () => {
 	generateAPIResponse(incomingMessageDiv);
 };
 
-
 // Handle sending outgoing chat messages
 const handleOutgoingChat = () => {
 	firstName = nameField.value;
 	costume = costumeField.value;
-	// userMessage = "My name is " + nameField.trim() + " and I am dressed as " + costumeField.trim() + ". " || userMessage;
-	
-	if (!userMessage || isResponseGenerating) return; // Exit if there is no message or response is generating
+
+	if (!firstName || !costume || isResponseGenerating) return; // Exit if there is no message or response is generating
 
 	isResponseGenerating = true;
 
 	const html = `<div class="message-content">
                   <p class="text"></p>
                 </div>`;
-
-	const outgoingMessageDiv = createMessageElement(html, "outgoing");
-	outgoingMessageDiv.querySelector(".text").innerText = userMessage;
-	chatContainer.appendChild(outgoingMessageDiv);
 
 	typingForm.reset(); // Clear input field
 	// document.body.classList.add("hide-header");
@@ -149,7 +151,7 @@ const handleOutgoingChat = () => {
 deleteChatButton.addEventListener("click", () => {
 	if (confirm("Are you sure you want to delete all the chats?")) {
 		localStorage.removeItem("saved-chats");
-		loadDataFromLocalstorage();
+		loadChatHistory();
 	}
 });
 
@@ -159,4 +161,4 @@ typingForm.addEventListener("submit", e => {
 	handleOutgoingChat();
 });
 
-loadDataFromLocalstorage();
+loadChatHistory();
