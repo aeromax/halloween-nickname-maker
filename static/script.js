@@ -1,14 +1,15 @@
+import * as helpers from "/helpers.js";
 const typingForm = document.querySelector(".typing-form");
-const chatContainer = document.querySelector(".chat-list");
+const chatContainer = document.querySelector(".chat-history");
+const incomingChat = document.querySelector(".chat-list");
 const deleteChatButton = document.querySelector("#delete-chat-button");
-
+const submitButton = document.querySelector("#send-message-button");
 const nameField = document.querySelector("#nameField");
 const costumeField = document.querySelector("#costumeField");
 let firstName;
 let costume;
 
 // State variables
-let userMessage = new Object();
 let isResponseGenerating = false;
 
 // API configuration
@@ -23,20 +24,19 @@ const loadChatHistory = async () => {
 			headers: {"Content-Type": "application/json"},
 		});
 		if (!response.ok) throw new Error("Failed to fetch log data");
-		const logData = await response.json();
-		const entries = logData.sessionHistory;
-		const html = `<div class="message-content">
-		<p class="text"></p>
+		let logData = await response.json();
+		logData = logData.sessionHistory;
+		const html = `<div class="message-content" >
+					<p class="text"></p>
                 </div>`;
-		if (entries.length > 0) {
-			for (const entry of entries) {
-				const message = entries[entry][1].parts[0].result;
-				const div = createMessageElement(html);
-				div.querySelector(".text").append(message);
-				chatContainer.appendChild(div);
-			}
+		for (const entry in logData) {
+			const message = logData[entry].result;
+			const messageID = logData[entry].msgID;
+			const div = createMessageElement(html);
+			div.setAttribute("data-id", messageID);
+			div.querySelector(".text").append(message);
+			chatContainer.prepend(div);
 		}
-		if (!response.ok) throw new Error(data.error);
 	} catch (error) {
 		console.log(error);
 	}
@@ -50,30 +50,38 @@ const createMessageElement = (content, ...classes) => {
 };
 
 // Show typing effect by displaying words one by one
-const showTypingEffect = (text, textElement, incomingMessageDiv) => {
-	const words = text.split(" ");
-	let currentWordIndex = 0;
+const showTypingEffect = (text, textElements, incomingMessageDiv) => {
+	const splitText = helpers.splitTextByAsterisk(text);
+	// const words1 = splitText.before.split(" ");
+	// const words3 = splitText.after.split(" ");
+	// splitText.nickname = helpers.isolateNickname(text);
+	const textParts = [splitText.before.split(" "), [helpers.isolateNickname(text)], splitText.after.split(" ")];
+	for (let i = 0; i < textElements.length; i++) {
+		const words = textParts[i]; // Use the correct part for each element
+		const element = textElements[i];
+		let currentWordIndex = 0;
 
-	const typingInterval = setInterval(() => {
-		// Append each word to the text element with a space
-		textElement.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
-		incomingMessageDiv.querySelector(".icon").classList.add("hide");
+		const typingInterval = setInterval(() => {
+			// Append each word to the text element with a space
+			element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
 
-		// If all words are displayed
-		if (currentWordIndex === words.length) {
-			clearInterval(typingInterval);
-			isResponseGenerating = false;
-			incomingMessageDiv.querySelector(".icon").classList.remove("hide");
-			localStorage.setItem("saved-chats", chatContainer.innerHTML); // Save chats to local storage
-		}
-		chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-	}, 75);
+			// If all words are displayed
+			if (currentWordIndex === words.length) {
+				clearInterval(typingInterval);
+				isResponseGenerating = false;
+				// Remove loading icon when done
+				// incomingMessageDiv.querySelector(".icon").classList.remove("hide");
+				// localStorage.setItem("saved-chats", chatContainer.innerHTML); // Save chats to local storage
+			}
+
+			chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+		}, 50);
+	}
 };
 
 // Fetch response from the API based on user message
 const generateAPIResponse = async incomingMessageDiv => {
-	const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
-
+	const textElements = incomingMessageDiv.querySelectorAll(".text"); // Getting text element
 	try {
 		// Send a POST request to the API with the user's message
 		const response = await fetch(API_URL, {
@@ -84,25 +92,16 @@ const generateAPIResponse = async incomingMessageDiv => {
 				costume: costume,
 			}),
 		});
-
-		if (!response.ok) {
-			throw new Error("Failed to fetch nickname.");
-		}
 		const data = await response.json();
-
 		if (!response.ok) throw new Error(data.error.message);
-		loadChatHistory();
-		// Get the API response text and remove asterisks from it
-		// const apiResponse = data?.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1");
 		const apiResponse = data.nickname;
-		console.log(data.nickname);
-		showTypingEffect(apiResponse, textElement, incomingMessageDiv); // Show typing effect
+		showTypingEffect(apiResponse, textElements, incomingMessageDiv); // Show typing effect
 	} catch (error) {
 		// Handle error
 		isResponseGenerating = false;
-		textElement.innerText = error;
-		console.log(error.message);
-		textElement.parentElement.closest(".message").classList.add("error.message");
+		textElements[1].innerText = error;
+		console.log(error);
+		textElements[1].parentElement.closest(".message").classList.add("error.message");
 	} finally {
 		incomingMessageDiv.classList.remove("loading");
 	}
@@ -111,20 +110,20 @@ const generateAPIResponse = async incomingMessageDiv => {
 // Show a loading animation while waiting for the API response
 const showLoadingAnimation = () => {
 	const html = `<div class="message-content">
-                  
-                  <p class="text"></p>
-                  <div class="loading-indicator">
-                    <div class="loading-bar"></div>
-                    <div class="loading-bar"></div>
-                    <div class="loading-bar"></div>
-                  </div>
-                </div>
-                <span onClick="copyMessage(this)" class="icon material-symbols-rounded">content_copy</span>`;
+	<p class="text text1"></p>
+	<p class="text text3 nickname-bold"></p>
+	<p class="text text2"></p>
+	<div class="loading-indicator">
+		<div class="loading-bar"></div>
+		<div class="loading-bar"></div>
+		<div class="loading-bar"></div>
+	</div>
+</div>
+`;
 
 	const incomingMessageDiv = createMessageElement(html, "incoming", "loading");
-	chatContainer.appendChild(incomingMessageDiv);
-
-	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+	incomingChat.appendChild(incomingMessageDiv);
+	// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 	generateAPIResponse(incomingMessageDiv);
 };
 
@@ -137,13 +136,9 @@ const handleOutgoingChat = () => {
 
 	isResponseGenerating = true;
 
-	const html = `<div class="message-content">
-                  <p class="text"></p>
-                </div>`;
-
 	typingForm.reset(); // Clear input field
 	// document.body.classList.add("hide-header");
-	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+	// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 	setTimeout(showLoadingAnimation, 500); // Show loading animation after a delay
 };
 
@@ -161,4 +156,4 @@ typingForm.addEventListener("submit", e => {
 	handleOutgoingChat();
 });
 
-loadChatHistory();
+// loadChatHistory();

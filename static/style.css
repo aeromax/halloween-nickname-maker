@@ -9,27 +9,26 @@
 }
 
 :root {
-	/* Dark mode colors */
+	--text-color: #ffffff;
+	--highlight-color: #00e66f;
+	--subheading-color: #828282;
+	--placeholder-color: #a6a6a6;
+	--primary-color: #2f195f;
+	--secondary-color: #383838;
+	--secondary-hover-color: #0c8346;
+}
+/* :root {
 	--text-color: #e3e3e3;
 	--subheading-color: #828282;
 	--placeholder-color: #a6a6a6;
 	--primary-color: #242424;
 	--secondary-color: #383838;
 	--secondary-hover-color: #444;
-}
-
-.light_mode {
-	/* Light mode colors */
-	--text-color: #222;
-	--subheading-color: #a0a0a0;
-	--placeholder-color: #6c6c6c;
-	--primary-color: #fff;
-	--secondary-color: #e9eef6;
-	--secondary-hover-color: #dbe1ea;
-}
+} */
 
 body {
 	background: var(--primary-color);
+	background-image: url("/background.webp");
 }
 
 .header,
@@ -40,11 +39,15 @@ body {
 }
 
 .header {
-	margin-top: 6vh;
-	padding: 1rem;
+	margin-top: 2vh;
 	overflow-x: hidden;
+	text-align: center;
 }
-
+.header img {
+	width: 80%;
+	height: auto;
+	margin: 0 auto;
+}
 body.hide-header .header {
 	margin: 0;
 	display: none;
@@ -57,8 +60,10 @@ body.hide-header .header {
 }
 
 .header .title {
-	font-size: 3rem;
-	background: linear-gradient(to right, #4285f4, #d96570);
+	display: none;
+	font-size: 2.6rem;
+	margin: -30px 0 0 0;
+	background: linear-gradient(to top, #00e66f, #95fcc7);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -67,63 +72,9 @@ body.hide-header .header {
 	font-size: 2.6rem;
 	color: var(--subheading-color);
 }
-.history-text {
-	font-size: 2.6rem;
-	color: var(--secondary-hover-color);
-}
 
-.suggestion-list {
-	width: 100%;
-	list-style: none;
-	display: flex;
-	gap: 1.25rem;
-	margin-top: 9.5vh;
-	overflow: hidden;
-	overflow-x: auto;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none;
-}
-
-.suggestion-list .suggestion {
-	cursor: pointer;
-	padding: 1.25rem;
-	width: 222px;
-	flex-shrink: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	border-radius: 0.75rem;
-	justify-content: space-between;
-	background: var(--secondary-color);
-	transition: 0.2s ease;
-}
-
-.suggestion-list .suggestion:hover {
-	background: var(--secondary-hover-color);
-}
-
-.suggestion-list .suggestion :where(.text, .icon) {
-	font-weight: 400;
-	color: var(--text-color);
-}
-
-.suggestion-list .suggestion .icon {
-	width: 42px;
-	height: 42px;
-	display: flex;
-	font-size: 1.3rem;
-	margin-top: 2.5rem;
-	align-self: flex-end;
-	align-items: center;
-	border-radius: 50%;
-	justify-content: center;
-	color: var(--text-color);
-	background: var(--primary-color);
-}
-
-.chat-list,
-.chat-history {
-	padding: 2rem 1rem 12rem;
+.chat-list {
+	padding: 0 1rem 12rem;
 	max-height: 60vh;
 	overflow-y: auto;
 	scrollbar-color: #999 transparent;
@@ -134,24 +85,24 @@ body.hide-header .header {
 }
 
 .chat-list .message .message-content {
-	display: flex;
-	gap: 1.5rem;
 	width: 100%;
 	align-items: center;
+	text-align: center;
 }
 
-.chat-list .message .text {
+.chat-list .message .message-content .text1,
+.chat-list .message .message-content .text2 {
 	white-space: pre-wrap;
-	font-size: 2.6rem;
-	color: var(--secondary-hover-color);
-}
-.chat-list .message:last-of-type .text {
+	font-size: 1.2rem;
 	color: var(--text-color);
-	white-space: pre-wrap;
-	font-size: 2.6rem;
-	color: var(--subheading-color);
+	padding: 0 10rem;
 }
 
+.chat-list .message .message-content .text3 {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--highlight-color);
+}
 .chat-list .message.error .text {
 	color: #e55865;
 }
