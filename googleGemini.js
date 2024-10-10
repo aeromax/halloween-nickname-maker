@@ -1,1 +1,0 @@
-import {GoogleGenerativeAi} from "google-generative-ai";

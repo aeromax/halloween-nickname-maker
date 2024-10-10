@@ -7,20 +7,25 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const helpers = require("./static/helpers");
+const helpers = require("./helpers");
 //Writing to server storage
-var fs = require("fs");
-delete require.cache[require.resolve("./userLog.json")];
-const sessionHistory = require("./userLog.json");
+var fs = require("/fs");
+delete require.cache[require.resolve("/userLog.json")];
+const sessionHistory = require("/userLog.json");
 
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
-app.use(express.static(__dirname + "/static"));
+// app.use(express.static(__dirname + "/static"));
+
+// Endpoint to serve page
+app.get("/", function (req, res) {
+	res.sendFile(__dirname + "../index.html");
+});
 
 const model = genAI.getGenerativeModel({
 	model: "gemini-1.5-flash-8b",
-	systemInstruction: "Respond with a creative, spooky, halloween-themed nickname that utilizes their first name and is topical based on the costume they are wearing. Make sure you respond in a fun, lighthearted way. Don't be afraid to be a little chatty. The responses should emphasize creativity and fun while being respectful and appropriate for all audiences. Avoid any references to violence, gore, death, or inappropriate language. The nicknames should remain lighthearted friendly. Avoid repetetiveness, and be poetic. When you return the result, you must wrap the nickname itself in an asterix so I can isolate it. If the user inputs a response that is rude, uses offense language, is inappropriate or sexually explicity, do not generate a nickname and provide a one sentence explanation as to why why you chose not to accept their input. ",
+	systemInstruction: "Respond with a creative, spooky, halloween-themed nickname that utilizes their first name and is topical based on the costume they are wearing. Make sure you respond in a fun, lighthearted way The responses should emphasize creativity and fun while being respectful and appropriate for all audiences. Avoid any references to violence, gore, death, or inappropriate language. The nicknames should remain lighthearted friendly. Avoid repetetiveness, and be poetic. Don't be afraid to be a little chatty, but limit the response to 2 sentences. Make the nickname revealed at the last part of the response, not in the middle. I don't want any language after the nickname. When you return the result, you must wrap the nickname itself in an asterix so I can isolate it. If the user inputs a response that is rude, uses offense language, is inappropriate or sexually explicity, do not generate a nickname and provide a one sentence explanation as to why why you chose not to accept their input. ",
 });
 
 const generationConfig = {
@@ -56,14 +61,14 @@ const writeToLog = sessionHistory => {
 // };
 
 // Endpoint to serve page
-app.get("/", function (req, res) {
-	res.sendFile(__dirname + "/index.html");
-});
+// app.get("/", function (req, res) {
+// 	res.sendFile(__dirname + "/index.html");
+// });
 
 // GET endpoint to get log history
 app.get("/log", async (req, res) => {
 	try {
-		const sessionHistory = require("./userLog.json");
+		const sessionHistory = require("../userLog.json");
 		res.status(200).json({sessionHistory});
 	} catch (error) {
 		res.status(500).json({error: "Could not fetch log"});

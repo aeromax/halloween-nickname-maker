@@ -28,7 +28,7 @@
 
 body {
 	background: var(--primary-color);
-	background-image: url("/background.webp");
+	background-image: url("../img/background.webp");
 }
 
 .header,
