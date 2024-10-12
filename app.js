@@ -7,21 +7,17 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const helpers = require("./helpers");
 //Writing to server storage
-var fs = require("/fs");
-delete require.cache[require.resolve("/userLog.json")];
-const sessionHistory = require("/userLog.json");
-
+var fs = require("fs");
+delete require.cache[require.resolve("./userLog.json")];
+let sessionHistory = require("./userLog.json");
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
-// app.use(express.static(__dirname + "/static"));
-
-// Endpoint to serve page
-app.get("/", function (req, res) {
-	res.sendFile(__dirname + "../index.html");
-});
+const isolateNickname = function (nickname) {
+	const match = nickname.match(/\*(.*?)\*/);
+	return match ? match[1] : null;
+};
 
 const model = genAI.getGenerativeModel({
 	model: "gemini-1.5-flash-8b",
@@ -36,41 +32,35 @@ const generationConfig = {
 	responseMimeType: "text/plain",
 };
 
-const refreshSessionHistory = () => {
-	console.log("");
-};
 const writeToLog = sessionHistory => {
 	fs.writeFile("userLog.json", JSON.stringify(sessionHistory, null, 2), "utf8", err => {
+		if (sessionHistory != []) {
+			console.log(`Cleared log`);
+		}
 		if (err) {
 			console.error("Error writing to userLog.json:", err);
-			return; // Handle error appropriately (e.g., logging it or notifying the user)
+			return err; // Handle error appropriately (e.g., logging it or notifying the user)
 		}
-		console.log("Session successfully saved to log");
 	});
 };
-// app.deleteHistory = () => {
-// 	sessionHistory = "";
-// 	fs.writeFile("userLog.json", JSON.stringify("{}}"), "utf8", err => {
-// 		if (err) {
-// 			throw new Error(err, {
-// 				message: "Could not delete server history",
-// 			});
-// 		}
-// 		console.log("Session history deleted");
-// 	});
-// };
 
-// Endpoint to serve page
-// app.get("/", function (req, res) {
-// 	res.sendFile(__dirname + "/index.html");
-// });
+app.delete("/log", async function (req, res) {
+	const entry = req.body.entryID;
+	Array.match(sessionHistory.msgID);
+	try {
+		await writeToLog(sessionHistory);
+		res.status(200).json({message: `Entry ${entry} deleted`});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({err});
+	}
+});
 
 // GET endpoint to get log history
 app.get("/log", async (req, res) => {
 	try {
-		const sessionHistory = require("../userLog.json");
 		res.status(200).json({sessionHistory});
-	} catch (error) {
+	} catch (err) {
 		res.status(500).json({error: "Could not fetch log"});
 	}
 });
@@ -87,7 +77,7 @@ app.post("/generate-nickname", async (req, res) => {
 			history: sessionHistory[currentSessionId],
 		});
 		const nickname = await result.response.text();
-		const cleanResult = await helpers.isolateNickname(nickname);
+		const cleanResult = await isolateNickname(nickname);
 		const time = new Date();
 		// Append this interaction to the session history (if needed later for more context)
 		sessionHistory.push({
@@ -101,11 +91,10 @@ app.post("/generate-nickname", async (req, res) => {
 		});
 
 		res.status(200).json({nickname});
-	} catch (error) {
-		console.error("Error generating nickname:", error);
-		res.status(500).json(error);
-	} finally {
 		writeToLog(sessionHistory);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({err});
 	}
 });
 

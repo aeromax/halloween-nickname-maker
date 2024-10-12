@@ -23,4 +23,4 @@ const isolateNickname = function (nickname) {
 	return match ? match[1] : null;
 };
 
-export {splitTextByAsterisk, isolateNickname};
+// export {splitTextByAsterisk, isolateNickname};

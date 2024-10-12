@@ -2,10 +2,11 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.html",
+	"main": "/src/index.js",
 	"scripts": {
-		"build": "webpack --mode production",
-		"start": "webpack serve --mode development"
+		"start": "parcel src/index.html",
+		"express": "node app.local.js",
+		"build": "parcel build app.js"
 	},
 	"repository": {
 		"type": "git",
@@ -13,6 +14,9 @@
 	},
 	"author": "Max Palmer",
 	"license": "ISC",
+	"engines": {
+		"node": "20.18.0"
+	},
 	"dependencies": {
 		"@google/generative-ai": "^0.21.0",
 		"cors": "^2.8.5",
@@ -28,23 +32,11 @@
 		"serverless-http": "^3.2.0",
 		"stream": "^0.0.3",
 		"stream-http": "^3.2.0",
-		"uuid": "^10.0.0",
-		"webpack": "^5.95.0"
+		"uuid": "^10.0.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.25.7",
-		"@babel/preset-env": "^7.25.7",
-		"babel-loader": "^9.2.1",
-		"css-loader": "^7.1.2",
-		"html-webpack-plugin": "^5.6.0",
-		"style-loader": "^4.0.0",
-		"url": "^0.11.4",
-		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^5.1.0"
-	},
-	"browser": {
-		"fs": false,
-		"path": false,
-		"os": false
+		"@babel/core": "^7.25.8",
+		"@babel/preset-env": "^7.25.8",
+		"parcel": "^2.12.0"
 	}
 }

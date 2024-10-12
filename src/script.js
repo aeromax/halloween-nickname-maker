@@ -1,4 +1,3 @@
-import * as helpers from "/helpers.js";
 const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-history");
 const incomingChat = document.querySelector(".chat-list");
@@ -8,7 +7,7 @@ const nameField = document.querySelector("#nameField");
 const costumeField = document.querySelector("#costumeField");
 let firstName;
 let costume;
-
+let sessionHistory = [];
 // State variables
 let isResponseGenerating = false;
 
@@ -16,27 +15,78 @@ let isResponseGenerating = false;
 
 const API_URL = "http://localhost:3000/generate-nickname";
 
+const splitTextByAsterisk = function (phrase) {
+	const firstAsteriskIndex = phrase.indexOf("*");
+	const lastAsteriskIndex = phrase.lastIndexOf("*");
+	// If no asterisks are found, return the whole phrase in the "before" part and an empty "after" part
+	if (firstAsteriskIndex === -1 || lastAsteriskIndex === -1) {
+		return {
+			before: phrase,
+			after: "",
+		};
+	}
+	// Get the text before the first asterisk
+	const beforeText = phrase.substring(0, firstAsteriskIndex).trim();
+	// Get the text after the last asterisk
+	const afterText = phrase.substring(lastAsteriskIndex + 1).trim();
+	// Return the two parts as an object
+	return {
+		before: beforeText,
+		after: afterText,
+	};
+};
+const isolateNickname = function (nickname) {
+	const match = nickname.match(/\*(.*?)\*/);
+	return match ? match[1] : null;
+};
+const deleteEntry = async entry => {
+	try {
+		const response = await fetch("http://localhost:3000/log", {
+			method: "DELETE",
+			headers: {"Content-Type": "application/json"},
+			body: JSON.stringify({
+				entryID: entry,
+			}),
+		});
+		loadChatHistory();
+	} catch (err) {
+		console.log(err.stack);
+	}
+};
+const chatGradient = () => {
+	const elements = chatContainer.querySelectorAll(".message");
+	for (entry in elements) {
+		let amount = 1 / elements.length;
+		let opacity = 1 - amount * entry;
+		// console.log(`Amount is ${amount}, opacity is ${opacity}`);
+		elements[entry].style.opacity = opacity;
+	}
+};
 // Load chat history from server
 const loadChatHistory = async () => {
+	const html = `<div class="message-content">
+					<p class="text"></p>
+                </div>`;
 	try {
 		const response = await fetch("http://localhost:3000/log", {
 			method: "GET",
 			headers: {"Content-Type": "application/json"},
 		});
 		if (!response.ok) throw new Error("Failed to fetch log data");
-		let logData = await response.json();
-		logData = logData.sessionHistory;
-		const html = `<div class="message-content" >
-					<p class="text"></p>
-                </div>`;
-		for (const entry in logData) {
-			const message = logData[entry].result;
-			const messageID = logData[entry].msgID;
+		let data = await response.json();
+		data = data.sessionHistory;
+		for (entry in data) {
+			sessionHistory.push(data[entry]);
+			const message = data[entry].result;
+			const messageID = data[entry].msgID;
 			const div = createMessageElement(html);
 			div.setAttribute("data-id", messageID);
 			div.querySelector(".text").append(message);
 			chatContainer.prepend(div);
 		}
+		// chatGradient();
+
+		console.log(`Refreshed log with ${data.length} entries`);
 	} catch (error) {
 		console.log(error);
 	}
@@ -51,11 +101,8 @@ const createMessageElement = (content, ...classes) => {
 
 // Show typing effect by displaying words one by one
 const showTypingEffect = (text, textElements, incomingMessageDiv) => {
-	const splitText = helpers.splitTextByAsterisk(text);
-	// const words1 = splitText.before.split(" ");
-	// const words3 = splitText.after.split(" ");
-	// splitText.nickname = helpers.isolateNickname(text);
-	const textParts = [splitText.before.split(" "), [helpers.isolateNickname(text)], splitText.after.split(" ")];
+	const splitText = splitTextByAsterisk(text);
+	const textParts = [splitText.before.split(" "), [isolateNickname(text)], splitText.after.split(" ")];
 	for (let i = 0; i < textElements.length; i++) {
 		const words = textParts[i]; // Use the correct part for each element
 		const element = textElements[i];
@@ -71,7 +118,6 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 				isResponseGenerating = false;
 				// Remove loading icon when done
 				// incomingMessageDiv.querySelector(".icon").classList.remove("hide");
-				// localStorage.setItem("saved-chats", chatContainer.innerHTML); // Save chats to local storage
 			}
 
 			chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
@@ -93,14 +139,14 @@ const generateAPIResponse = async incomingMessageDiv => {
 			}),
 		});
 		const data = await response.json();
-		if (!response.ok) throw new Error(data.error.message);
+		if (!response.ok) throw new Error(data.err);
 		const apiResponse = data.nickname;
 		showTypingEffect(apiResponse, textElements, incomingMessageDiv); // Show typing effect
-	} catch (error) {
+	} catch (err) {
 		// Handle error
+		console.log(`Couldn't fetch nickname: ${err}`);
 		isResponseGenerating = false;
-		textElements[1].innerText = error;
-		console.log(error);
+		textElements[1].innerText = err;
 		textElements[1].parentElement.closest(".message").classList.add("error.message");
 	} finally {
 		incomingMessageDiv.classList.remove("loading");
@@ -137,16 +183,14 @@ const handleOutgoingChat = () => {
 	isResponseGenerating = true;
 
 	typingForm.reset(); // Clear input field
-	// document.body.classList.add("hide-header");
-	// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+	incomingChat.innerHTML = "";
 	setTimeout(showLoadingAnimation, 500); // Show loading animation after a delay
 };
 
 // Delete all chats from local storage when button is clicked
 deleteChatButton.addEventListener("click", () => {
 	if (confirm("Are you sure you want to delete all the chats?")) {
-		localStorage.removeItem("saved-chats");
-		loadChatHistory();
+		deleteEntry("all");
 	}
 });
 
@@ -156,4 +200,4 @@ typingForm.addEventListener("submit", e => {
 	handleOutgoingChat();
 });
 
-// loadChatHistory();
+loadChatHistory();
