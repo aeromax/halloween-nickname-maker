@@ -7,7 +7,9 @@
 	box-sizing: border-box;
 	font-family: "Poppins", sans-serif;
 }
-
+div {
+	margin: 0 auto;
+}
 :root {
 	--text-color: #ffffff;
 	--highlight-color: #00e66f;
@@ -33,9 +35,11 @@
 
 body {
 	background: var(--primary-color);
+	color: #ffffff;
 	height: 100vh;
 }
-body:before {
+body:after {
+	z-index: -99;
 	content: " ";
 	display: block;
 	position: absolute;
@@ -50,8 +54,7 @@ body:before {
 	background-size: cover;
 }
 .wrapper {
-	display: flex;
-	flex-direction: column;
+	display: block;
 	margin: 0 auto;
 	height: 100%;
 }
@@ -60,45 +63,76 @@ body:before {
 	overflow-x: hidden;
 	text-align: center;
 }
-.chat-list,
+.chat-list {
+	height: 12rem;
+	padding: 0 4rem 2rem 4rem;
+	width: 100%;
+	margin: 0 auto;
+}
 .chat-history {
-	padding: 0 4rem 10rem 4rem;
+	height: 100%;
+	display: block;
 	scrollbar-color: #999 transparent;
 	margin: 0 auto;
 	overflow: -moz-scrollbars-vertical;
-	overflow-y: scroll;
 	width: 100%;
-}
-.chat-history {
+	overflow-y: scroll;
 	padding-top: 2rem;
-	flex-grow: 1;
-	/* background: rgb(17, 17, 17); */
-	background: linear-gradient(0deg, rgba(17, 17, 17, 1) 0%, rgba(47, 25, 95, 0) 100%);
+	bottom: 0;
+	background: linear-gradient(0deg, rgba(17, 17, 17, 0.3) 0%, rgba(47, 25, 95, 0) 100%);
+}
+
+.chat-history:after {
+	content: " ";
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 20%;
+	background: linear-gradient(0deg, rgba(17, 17, 17, 0.9) 0%, rgba(47, 25, 95, 0) 100%);
+	cursor: all-scroll;
 }
 .chat-history .message {
 	color: rgb(124, 74, 232);
-	font-size: var(--font-size-2);
+	font-size: var(--font-size-3);
 	display: flex;
 	padding: 0.5rem 0;
 	flex-direction: row;
 	justify-content: center;
 }
+.chat-history .icon {
+	color: var(--placeholder-color);
+	transition: 0.2s ease;
+	padding-top: 0.5rem;
+	position: absolute;
+	font-size: 2rem;
+	display: inline-block;
+}
+.chat-history .icon.hide {
+	display: none;
+	transition: 0.2s ease;
+}
+
 .typing-area {
 	width: 100%;
 	left: 0;
-	padding: 1rem 0 0 0;
-	/* background: var(--primary-color); */
+	padding: 1rem 0 2rem 0;
 }
 .header,
 .chat-list .message,
 .typing-form {
 	margin: 0 auto;
 	max-width: 980px;
+	width: 100vw;
 }
-
+.header {
+	height: 10rem;
+}
 .header img {
 	width: auto;
 	height: 100%;
+	max-height: 200px;
 	margin: 0 auto;
 }
 body.hide-header .header {
@@ -129,6 +163,7 @@ body.hide-header .header {
 	display: flex;
 	flex-direction: row;
 	justify-items: center;
+	width: 100%;
 }
 .chat-list .message.incoming {
 	margin-top: 1.5rem;
@@ -143,13 +178,15 @@ body.hide-header .header {
 	white-space: pre-wrap;
 	font-size: var(--font-size-2);
 	color: var(--text-color);
-	padding: 0 10rem;
+	padding: 0 5rem;
 }
 
 .chat-list .message .message-content .text3 {
 	font-size: var(--font-size-1);
 	font-weight: 700;
 	color: var(--highlight-color);
+	transition: 2s ease;
+	width: 100%;
 }
 .chat-list .message.error .text {
 	color: #e55865;

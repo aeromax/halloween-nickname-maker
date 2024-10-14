@@ -1,4 +1,10 @@
-const serverless = require('serverless-http');
- const app = require('../../app.js');
+import express, {Router} from "express";
+import serverless from "serverless-http";
 
- module.exports.handler = serverless(app);
+const api = express();
+
+const router = Router();
+
+api.use("/api/", router);
+
+export const handler = serverless(api);

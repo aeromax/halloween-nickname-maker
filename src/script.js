@@ -1,3 +1,4 @@
+import "./app";
 const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-history");
 const incomingChat = document.querySelector(".chat-list");
@@ -48,25 +49,21 @@ const deleteEntry = async entry => {
 				entryID: entry,
 			}),
 		});
+		if (!response.ok) {
+			throw new Error(err);
+		}
 		loadChatHistory();
 	} catch (err) {
 		console.log(err.stack);
 	}
 };
-const chatGradient = () => {
-	const elements = chatContainer.querySelectorAll(".message");
-	for (entry in elements) {
-		let amount = 1 / elements.length;
-		let opacity = 1 - amount * entry;
-		// console.log(`Amount is ${amount}, opacity is ${opacity}`);
-		elements[entry].style.opacity = opacity;
-	}
-};
+
 // Load chat history from server
 const loadChatHistory = async () => {
 	const html = `<div class="message-content">
 					<p class="text"></p>
-                </div>`;
+                </div>
+				<span class="material-symbols-rounded icon hide">delete</span>`;
 	try {
 		const response = await fetch("http://localhost:3000/log", {
 			method: "GET",
@@ -84,8 +81,6 @@ const loadChatHistory = async () => {
 			div.querySelector(".text").append(message);
 			chatContainer.prepend(div);
 		}
-		// chatGradient();
-
 		console.log(`Refreshed log with ${data.length} entries`);
 	} catch (error) {
 		console.log(error);
@@ -142,6 +137,8 @@ const generateAPIResponse = async incomingMessageDiv => {
 		if (!response.ok) throw new Error(data.err);
 		const apiResponse = data.nickname;
 		showTypingEffect(apiResponse, textElements, incomingMessageDiv); // Show typing effect
+		chatContainer.innerHTML = " ";
+		loadChatHistory();
 	} catch (err) {
 		// Handle error
 		console.log(`Couldn't fetch nickname: ${err}`);
@@ -190,9 +187,19 @@ const handleOutgoingChat = () => {
 // Delete all chats from local storage when button is clicked
 deleteChatButton.addEventListener("click", () => {
 	if (confirm("Are you sure you want to delete all the chats?")) {
-		deleteEntry("all");
+		deleteEntry();
 	}
 });
+
+// chatContainer.addEventListener("click", e => {
+// 	let elements = chatContainer.querySelectorAll(".message");
+// 	elements.forEach(item => {
+// 		item.addEventListener("click", function (e) {
+// 			const dataID = this.getAttribute("data-id");
+// 			deleteEntry(dataID);
+// 		});
+// 	});
+// });
 
 // Prevent default form submission and handle outgoing chat
 typingForm.addEventListener("submit", e => {

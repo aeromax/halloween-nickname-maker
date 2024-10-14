@@ -1,0 +1,18 @@
+[
+  {
+    "time": "Mon Oct 14 2024 12:35:41 GMT-0400 (Eastern Daylight Time)",
+    "msgID": "363a79bb-6ba9-49fb-b7fd-5766f03e9557",
+    "role": "model",
+    "name": "Violet",
+    "costume": "tinkerbelle",
+    "result": "Violet's Whisper"
+  },
+  {
+    "time": "Mon Oct 14 2024 12:38:07 GMT-0400 (Eastern Daylight Time)",
+    "msgID": "c9d602bd-5d49-4802-8dbd-78f739fbda1d",
+    "role": "model",
+    "name": "Justin",
+    "costume": "Bored dad",
+    "result": "Papa-Zoom!"
+  }
+]
