@@ -2,10 +2,11 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"main": ".src/app.js",
+	"source": "./src/index.html",
 	"scripts": {
-		"start": "parcel ./src/index.html",
-		"build": "parcel build ./src/app.js"
+		"dev": "parcel",
+		"build": "parcel build src/index.html",
+		"start": "node src/app.js"
 	},
 	"repository": {
 		"type": "git",

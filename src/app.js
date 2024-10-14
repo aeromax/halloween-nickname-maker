@@ -9,8 +9,8 @@ const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 //Writing to server storage
 var fs = require("fs");
-delete require.cache[require.resolve("./userLog.json")];
-let sessionHistory = require("./userLog.json");
+delete require.cache[require.resolve("userLog.json")];
+let sessionHistory = require("userLog.json");
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
