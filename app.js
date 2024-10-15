@@ -21,51 +21,9 @@ let sessionHistory = require("./userLog.json");
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
-// Endpoint to serve page
-// app.get("/", (req, res) => {
-// 	const html = `<!DOCTYPE html>
-// <!-- Coding By CodingNepal - www.codingnepalweb.com -->
-// <html lang="en">
-// 	<head>
-// 		<meta charset="UTF-8" />
-// 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-// 		<title>Zombiebrook Halloween Nickname Generator</title>
-// 		<!-- Linking Google Fonts For Icons -->
-// 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-// 		<link rel="stylesheet" href="./css/style.css" />
-// 	</head>
-// 	<body>
-// 		<div class="wrapper">
-// 			<header class="header">
-// 				<img src="./img/zombiebrook.png" alt="" />
-// 				<h1 class="title">Nickname Generator!</h1>
-// 			</header>
-// 			<div class="chat-list"></div>
-// 			<div class="typing-area">
-// 				<form action="#" class="typing-form">
-// 					<div class="input-wrapper">
-// 						<input id="nameField" type="text" placeholder="What's your first name?" class="typing-input" required />
-// 					</div>
-// 					<div class="input-wrapper">
-// 						<input id="costumeField" type="text" placeholder="What kind of costume are you wearing?" class="typing-input" required />
-// 					</div>
-// 					<button id="send-message-button" class="icon">Generate my nickname!</button>
-// 				</form>
-// 			</div>
-// 			<div class="chat-history"></div>
-// 			<div class="action-buttons">
-// 				<span id="delete-chat-button" class="icon material-symbols-rounded">delete</span>
-// 			</div>
-// 		</div>
-// 		<script src="./js/script.js"></script>
-// 	</body>
-// </html>
-// `;
-// 	res.type("html").send(html);
+// app.get("/", function (req, res) {
+// 	res.sendFile(__dirname + "/src/index.html");
 // });
-app.get("/", function (req, res) {
-	res.sendFile(__dirname + "../main.html");
-});
 
 const isolateNickname = function (nickname) {
 	const match = nickname.match(/\*(.*?)\*/);

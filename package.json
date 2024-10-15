@@ -2,11 +2,11 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"source": "./backend/app.js",
+	"main": "app.js",
 	"engine": "node: '20.18.0'",
 	"NODE_ENV": "production",
 	"scripts": {
-		"start": "node ./backend/app.js"
+		"start": "node app.js"
 	},
 	"repository": {
 		"type": "git",
