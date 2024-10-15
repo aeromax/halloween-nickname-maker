@@ -14,8 +14,8 @@ app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 //Writing to server storage
 let fs = require("fs");
-delete require.cache[require.resolve("userLog.json")];
-let sessionHistory = require("userLog.json");
+delete require.cache[require.resolve("./userLog.json")];
+let sessionHistory = require("./userLog.json");
 
 // delete require.cache[require.resolve("./userLog.json")];
 app.use(cors()); // Enable CORS for all origins
