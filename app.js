@@ -21,9 +21,9 @@ let sessionHistory = require("./userLog.json");
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
-// app.get("/", function (req, res) {
-// 	res.sendFile(__dirname + "/src/index.html");
-// });
+app.get("/", function (req, res) {
+	res.sendFile(__dirname + "./index.html");
+});
 
 const isolateNickname = function (nickname) {
 	const match = nickname.match(/\*(.*?)\*/);
