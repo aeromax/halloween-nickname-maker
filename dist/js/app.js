@@ -7,6 +7,8 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 //Writing to server storage
 let fs = require("fs");
@@ -18,9 +20,9 @@ app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
 // Endpoint to serve page
-// app.get("/", function (req, res) {
-// 	res.sendFile(__dirname + "../index.html");
-// });
+app.get("/", function (req, res) {
+	res.sendFile(__dirname + "../main.html");
+});
 
 const isolateNickname = function (nickname) {
 	const match = nickname.match(/\*(.*?)\*/);

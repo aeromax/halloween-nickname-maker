@@ -13,7 +13,7 @@ let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = "localhost:3000";
+// const API_URL = "localhost:3000";
 
 const splitTextByAsterisk = function (phrase) {
 	const firstAsteriskIndex = phrase.indexOf("*");
