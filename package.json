@@ -2,7 +2,7 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"source": "dist/index.html",
+	"source": "dist/main.html",
 	"engine": "node: '20.18.0'",
 	"scripts": {
 		"start": "node dist/js/app.js"
