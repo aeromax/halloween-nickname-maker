@@ -2,10 +2,10 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"source": "dist/main.html",
+	"source": "src/js/app.js",
 	"engine": "node: '20.18.0'",
 	"scripts": {
-		"start": "node dist/js/app.js"
+		"start": "node src/js/app.js"
 	},
 	"repository": {
 		"type": "git",
@@ -38,7 +38,6 @@
 		"buffer": "^6.0.3",
 		"events": "^3.3.0",
 		"os-browserify": "^0.3.0",
-		"parcel": "^2.12.0",
 		"querystring-es3": "^0.2.1",
 		"stream-browserify": "^3.0.0",
 		"string_decoder": "^1.3.0",
