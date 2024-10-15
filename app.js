@@ -7,7 +7,7 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 8080;
 app.keepAliveTimeout = 120 * 1000;
 app.headersTimeout = 120 * 1000;
 app.listen(port, () => console.log(`App listening on port ${port}!`));
@@ -21,9 +21,9 @@ let sessionHistory = require("./userLog.json");
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
-app.use(express.static("/static"));
+app.use(express.static(__dirname + "/static"));
 app.get("/", function (req, res) {
-	res.sendFile(__dirname + "./static/index.html");
+	res.sendFile(__dirname + "/index.html");
 });
 
 const isolateNickname = function (nickname) {

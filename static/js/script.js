@@ -13,8 +13,7 @@ let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = "https://halloween-nickname-maker.onrender.com:10000";
-console.log(API_URL);
+const API_URL = "..";
 const splitTextByAsterisk = function (phrase) {
 	const firstAsteriskIndex = phrase.indexOf("*");
 	const lastAsteriskIndex = phrase.lastIndexOf("*");
@@ -80,7 +79,7 @@ const loadChatHistory = async () => {
 			div.querySelector(".text").append(message);
 			chatContainer.prepend(div);
 		}
-		console.log(`Refreshed log with ${data.length} entries`);
+		console.log(`Refreshed log with ${data.length || 0} entries`);
 	} catch (error) {
 		console.log(error);
 	}
