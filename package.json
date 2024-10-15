@@ -5,8 +5,7 @@
 	"source": "dist/index.html",
 	"engine": "node: '20.18.0'",
 	"scripts": {
-		"start": "node dist/js/app.js",
-		"deploy": "netlify deploy"
+		"start": "node dist/js/app.js"
 	},
 	"repository": {
 		"type": "git",

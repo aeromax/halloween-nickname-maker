@@ -10,7 +10,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 //Writing to server storage
 let fs = require("fs");
-delete require.cache[require.resolve("userLog.json")];
+delete require.cache[require.resolve("./userLog.json")];
 let sessionHistory = require("./userLog.json");
 
 // delete require.cache[require.resolve("./userLog.json")];
