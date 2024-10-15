@@ -7,8 +7,10 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+const port = process.env.PORT || 10000;
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
+app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 //Writing to server storage
 let fs = require("fs");
