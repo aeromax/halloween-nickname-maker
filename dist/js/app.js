@@ -7,17 +7,20 @@ const {v4: uuidv4} = require("uuid");
 const app = express();
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
+
 //Writing to server storage
-var fs = require("fs");
+let fs = require("fs");
 delete require.cache[require.resolve("userLog.json")];
-let sessionHistory = require("userLog.json");
+let sessionHistory = require("./userLog.json");
+
+// delete require.cache[require.resolve("./userLog.json")];
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
 
 // Endpoint to serve page
-app.get("/", function (req, res) {
-	res.sendFile(__dirname + "../index.html");
-});
+// app.get("/", function (req, res) {
+// 	res.sendFile(__dirname + "../index.html");
+// });
 
 const isolateNickname = function (nickname) {
 	const match = nickname.match(/\*(.*?)\*/);
@@ -47,9 +50,6 @@ const writeToLog = sessionHistory => {
 };
 
 app.delete("/log", async function (req, res) {
-	// const entry = req.body.entryID;
-	// let matchedEntry = sessionHistory.find(obj => obj.msgID == entry || {});
-	// console.log(matchedEntry);
 	sessionHistory = [];
 	try {
 		await writeToLog(sessionHistory);

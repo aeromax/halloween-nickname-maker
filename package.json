@@ -2,11 +2,11 @@
 	"name": "halloween-nickname-maker",
 	"version": "1.0.0",
 	"description": "",
-	"source": "./src/index.html",
+	"source": "dist/index.html",
+	"engine": "node: '20.18.0'",
 	"scripts": {
-		"dev": "parcel",
-		"build": "parcel build src/index.html",
-		"start": "node src/app.js"
+		"start": "node dist/js/app.js",
+		"deploy": "netlify deploy"
 	},
 	"repository": {
 		"type": "git",
@@ -14,9 +14,6 @@
 	},
 	"author": "Max Palmer",
 	"license": "ISC",
-	"engines": {
-		"node": "20.18.0"
-	},
 	"dependencies": {
 		"@google/generative-ai": "^0.21.0",
 		"cors": "^2.8.5",

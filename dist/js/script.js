@@ -13,7 +13,7 @@ let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = "http://localhost:3000/generate-nickname";
+const API_URL = "localhost:3000";
 
 const splitTextByAsterisk = function (phrase) {
 	const firstAsteriskIndex = phrase.indexOf("*");
@@ -41,7 +41,7 @@ const isolateNickname = function (nickname) {
 };
 const deleteEntry = async entry => {
 	try {
-		const response = await fetch("http://localhost:3000/log", {
+		const response = await fetch(API_URL + "/log", {
 			method: "DELETE",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify({
@@ -64,7 +64,7 @@ const loadChatHistory = async () => {
                 </div>
 				<span class="material-symbols-rounded icon hide">delete</span>`;
 	try {
-		const response = await fetch("http://localhost:3000/log", {
+		const response = await fetch(API_URL + "/log", {
 			method: "GET",
 			headers: {"Content-Type": "application/json"},
 		});
@@ -124,7 +124,7 @@ const generateAPIResponse = async incomingMessageDiv => {
 	const textElements = incomingMessageDiv.querySelectorAll(".text"); // Getting text element
 	try {
 		// Send a POST request to the API with the user's message
-		const response = await fetch(API_URL, {
+		const response = await fetch(API_URL + "/generate-nickname", {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify({
