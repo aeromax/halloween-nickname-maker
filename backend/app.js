@@ -61,7 +61,7 @@ app.get("/", (req, res) => {
 	</body>
 </html>
 `;
-	res.type("html").send("html");
+	res.type("html").send(html);
 });
 // app.get("/", function (req, res) {
 // 	res.sendFile(__dirname + "../main.html");
