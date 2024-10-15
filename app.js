@@ -20,7 +20,7 @@ let sessionHistory = require("./userLog.json");
 // delete require.cache[require.resolve("./userLog.json")];
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Enable JSON parsing for incoming requests
-
+console.log(__dirname);
 app.use(express.static(__dirname + "/static"));
 app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/index.html");
