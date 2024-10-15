@@ -13,7 +13,7 @@ let isResponseGenerating = false;
 
 // API configuration
 
-const API_URL = RENDER_EXTERNAL_URL + ":10000/";
+const API_URL = process.env.SERVER_URL + ":10000/";
 console.log(API_URL);
 const splitTextByAsterisk = function (phrase) {
 	const firstAsteriskIndex = phrase.indexOf("*");
