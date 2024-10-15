@@ -48,7 +48,7 @@ body:after {
 	width: 100%;
 	height: 100%;
 	opacity: 0.3;
-	background-image: url("../src/img/background.png");
+	background-image: url("../static/img/background.png");
 	background-repeat: no-repeat;
 	background-position: 50% 0;
 	background-size: cover;
