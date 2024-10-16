@@ -14,6 +14,7 @@ let isResponseGenerating = false;
 // API configuration
 
 const API_URL = "..";
+
 const splitTextByAsterisk = function (phrase) {
 	const firstAsteriskIndex = phrase.indexOf("*");
 	const lastAsteriskIndex = phrase.lastIndexOf("*");
@@ -111,8 +112,11 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 				clearInterval(typingInterval);
 				isResponseGenerating = false;
 			}
-			chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
+			// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 		}, 75);
+		setTimeout(() => {
+			document.querySelector(".text3").classList.remove("hidden");
+		}, 2000);
 	}
 };
 
@@ -142,7 +146,6 @@ const generateAPIResponse = async incomingMessageDiv => {
 		textElements[0].innerText = error;
 		textElements[0].classList.add("error", "message");
 	} finally {
-		document.querySelector(".text3").classList.remove("hidden");
 		incomingMessageDiv.classList.remove("loading");
 	}
 };
