@@ -19,7 +19,7 @@ div {
 	--secondary-color: #383838;
 	--secondary-hover-color: #0c8346;
 	--font-size-1: 3rem;
-	--font-size-2: 1.7rem;
+	--font-size-2: 1.5rem;
 	--font-size-3: 1.25rem;
 	--font-size-4: 1rem;
 	--font-size-5: 0.85rem;
@@ -57,6 +57,7 @@ body:after {
 	display: block;
 	margin: 0 auto;
 	height: 100%;
+	overflow: hidden;
 }
 .header {
 	margin-top: 2vh;
@@ -64,8 +65,8 @@ body:after {
 	text-align: center;
 }
 .chat-list {
-	height: 12rem;
-	padding: 0 4rem 2rem 4rem;
+	height: 200px;
+	padding: 2rem 4rem 2rem 4rem;
 	width: 100%;
 	margin: 0 auto;
 }
@@ -78,7 +79,7 @@ body:after {
 	width: 100%;
 	overflow-y: scroll;
 	padding-top: 2rem;
-	bottom: 0;
+	/* bottom: 0; */
 	background: linear-gradient(0deg, rgba(17, 17, 17, 0.3) 0%, rgba(47, 25, 95, 0) 100%);
 }
 
@@ -165,9 +166,6 @@ body.hide-header .header {
 	justify-items: center;
 	width: 100%;
 }
-.chat-list .message.incoming {
-	margin-top: 1.5rem;
-}
 
 .chat-list .message .message-content {
 	text-align: center;
@@ -178,17 +176,20 @@ body.hide-header .header {
 	white-space: pre-wrap;
 	font-size: var(--font-size-2);
 	color: var(--text-color);
-	padding: 0 5rem;
 }
 
 .chat-list .message .message-content .text3 {
 	font-size: var(--font-size-1);
 	font-weight: 700;
 	color: var(--highlight-color);
-	transition: 2s ease;
+	transition: all 2s ease;
 	width: 100%;
 }
-.chat-list .message.error .text {
+.chat-list .message .message-content .text3.hidden {
+	opacity: 0;
+	transition: all 2s ease;
+}
+.chat-list .message .message-content .text.error {
 	color: #e55865;
 }
 
@@ -242,7 +243,7 @@ body.hide-header .header {
 }
 
 .chat-list .message .loading-indicator .loading-bar {
-	height: 11px;
+	height: 16px;
 	width: 100%;
 	border-radius: 0.135rem;
 	background-position: -800px 0;
@@ -252,6 +253,7 @@ body.hide-header .header {
 
 .chat-list .message .loading-indicator .loading-bar:last-child {
 	width: 70%;
+	height: 40px;
 }
 
 @keyframes loading {
