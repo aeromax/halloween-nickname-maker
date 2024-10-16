@@ -27,11 +27,11 @@ const splitTextByAsterisk = function (phrase) {
 	// Get the text before the first asterisk
 	const beforeText = phrase.substring(0, firstAsteriskIndex).trim();
 	// Get the text after the last asterisk
-	const afterText = phrase.substring(lastAsteriskIndex + 1).trim();
+	// const afterText = phrase.substring(lastAsteriskIndex + 1).trim();
 	// Return the two parts as an object
 	return {
 		before: beforeText,
-		after: afterText,
+		// after: afterText + "!",
 	};
 };
 const isolateNickname = function (nickname) {
@@ -48,11 +48,13 @@ const deleteEntry = async entry => {
 			}),
 		});
 		if (!response.ok) {
-			throw new Error(err);
+			throw new Error(error);
 		}
 		loadChatHistory();
-	} catch (err) {
-		console.log(err.stack);
+	} catch (error) {
+		console.log(error.stack);
+	} finally {
+		chatContainer.innerHTML = "";
 	}
 };
 
@@ -60,8 +62,7 @@ const deleteEntry = async entry => {
 const loadChatHistory = async () => {
 	const html = `<div class="message-content">
 					<p class="text"></p>
-                </div>
-				<span class="material-symbols-rounded icon hide">delete</span>`;
+                </div>`;
 	try {
 		const response = await fetch(API_URL + "/log", {
 			method: "GET",
@@ -72,7 +73,7 @@ const loadChatHistory = async () => {
 		data = data.sessionHistory;
 		for (entry in data) {
 			sessionHistory.push(data[entry]);
-			const message = data[entry].result;
+			const message = data[entry].model.result;
 			const messageID = data[entry].msgID;
 			const div = createMessageElement(html);
 			div.setAttribute("data-id", messageID);
@@ -95,9 +96,9 @@ const createMessageElement = (content, ...classes) => {
 // Show typing effect by displaying words one by one
 const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 	const splitText = splitTextByAsterisk(text);
-	const textParts = [splitText.before.split(" "), [isolateNickname(text)], splitText.after.split(" ")];
+	const textParts = [splitText.before.split(" "), [isolateNickname(text)]];
 	for (let i = 0; i < textElements.length; i++) {
-		const words = textParts[i]; // Use the correct part for each element
+		const words = textParts[i] || ""; // Use the correct part for each element
 		const element = textElements[i];
 		let currentWordIndex = 0;
 
@@ -109,18 +110,16 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 			if (currentWordIndex === words.length) {
 				clearInterval(typingInterval);
 				isResponseGenerating = false;
-				// Remove loading icon when done
-				// incomingMessageDiv.querySelector(".icon").classList.remove("hide");
 			}
-
 			chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-		}, 50);
+		}, 75);
 	}
 };
 
 // Fetch response from the API based on user message
 const generateAPIResponse = async incomingMessageDiv => {
 	const textElements = incomingMessageDiv.querySelectorAll(".text"); // Getting text element
+	loadChatHistory();
 	try {
 		// Send a POST request to the API with the user's message
 		const response = await fetch(API_URL + "/generate-nickname", {
@@ -132,18 +131,18 @@ const generateAPIResponse = async incomingMessageDiv => {
 			}),
 		});
 		const data = await response.json();
-		if (!response.ok) throw new Error(data.err);
+		if (!response.ok) throw new Error(data.error);
+		console.log(data);
 		const apiResponse = data.nickname;
 		showTypingEffect(apiResponse, textElements, incomingMessageDiv); // Show typing effect
 		chatContainer.innerHTML = " ";
-		loadChatHistory();
-	} catch (err) {
+	} catch (error) {
 		// Handle error
-		console.log(`Couldn't fetch nickname: ${err}`);
 		isResponseGenerating = false;
-		textElements[1].innerText = err;
-		textElements[1].parentElement.closest(".message").classList.add("error.message");
+		textElements[0].innerText = error;
+		textElements[0].classList.add("error", "message");
 	} finally {
+		document.querySelector(".text3").classList.remove("hidden");
 		incomingMessageDiv.classList.remove("loading");
 	}
 };
@@ -152,14 +151,13 @@ const generateAPIResponse = async incomingMessageDiv => {
 const showLoadingAnimation = () => {
 	const html = `<div class="message-content">
 	<p class="text text1"></p>
-	<p class="text text3 nickname-bold"></p>
-	<p class="text text2"></p>
+	<p class="text text3 hidden"></p>
+	</div>
 	<div class="loading-indicator">
 		<div class="loading-bar"></div>
 		<div class="loading-bar"></div>
 		<div class="loading-bar"></div>
 	</div>
-</div>
 `;
 
 	const incomingMessageDiv = createMessageElement(html, "incoming", "loading");
