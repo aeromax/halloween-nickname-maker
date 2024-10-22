@@ -389,7 +389,7 @@ body.hide-header .header {
 	}
 }
 
-@media screen and (min-width: 400px) {
+@media screen and (max-width: 400px) {
 	.header > img {
 		width: 90vw;
 		height: auto;
