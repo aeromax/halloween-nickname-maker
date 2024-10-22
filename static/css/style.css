@@ -408,73 +408,6 @@ body.hide-header .header {
 	}
 }
 
-@media screen and (max-width: 1570px) {
-	.ghost-container {
-		left: 3vw;
-	}
-}
-@media screen and (max-width: 1070px) {
-	.ghost-container {
-		left: 1vw;
-	}
-}
-@media screen and (max-width: 900px) {
-	.typing-form {
-		flex-direction: column;
-		gap: 1rem;
-	}
-	.typing-form .input-wrapper {
-		width: 90vw;
-		margin: 0 auto;
-		flex-direction: column;
-	}
-	.typing-form .typing-input {
-		margin: 0;
-	}
-	.ghost-container {
-		display: none;
-	}
-}
-@media screen and (max-width: 400px) {
-	.chat-list .message .message-content .text1,
-	.chat-list .message .message-content .text2 {
-		font-size: var(--font-size-mobile-2);
-	}
-	.chat-list .message .message-content .text3 {
-		font-size: var(--font-size-mobile-1);
-	}
-	.chat-history .message {
-		font-size: var(--font-size-mobile-2);
-	}
-	.header {
-		min-height: 10%;
-		margin-bottom: 3rem;
-	}
-	.header > img {
-		width: 100%;
-		height: auto;
-		margin-top: 20px;
-	}
-	.typing-form {
-		flex-direction: column;
-		gap: 1rem;
-	}
-	.typing-form .input-wrapper {
-		width: 90vw;
-		margin: 0 auto;
-		flex-direction: column;
-	}
-	.typing-form .typing-input {
-		margin: 0;
-	}
-	.chat-list {
-		width: 90vw;
-		height: 50%;
-	}
-	.chat-history:after {
-		height: 20%;
-	}
-}
 .color {
 	animation: colorchange 50s; /* animation-name followed by duration in seconds*/
 	/* you could also use milliseconds (ms) or something like 2.5s */
@@ -632,5 +565,75 @@ body.hide-header .header {
 	100% {
 		transform: translateY(600px) scale(0, 2);
 		opacity: 0;
+	}
+}
+@media screen and (max-width: 1570px) {
+	.ghost-container {
+		left: 3vw;
+	}
+}
+@media screen and (max-width: 1070px) {
+	.ghost-container {
+		left: 1vw;
+	}
+}
+@media screen and (max-width: 900px) {
+	.drip-wrapper .drip-top {
+		top: -20px;
+	}
+	.typing-form {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.typing-form .input-wrapper {
+		width: 90vw;
+		margin: 0 auto;
+		flex-direction: column;
+	}
+	.typing-form .typing-input {
+		margin: 0;
+	}
+	.ghost-container {
+		display: none;
+	}
+}
+@media screen and (max-width: 400px) {
+	.chat-list .message .message-content .text1,
+	.chat-list .message .message-content .text2 {
+		font-size: var(--font-size-mobile-2);
+	}
+	.chat-list .message .message-content .text3 {
+		font-size: var(--font-size-mobile-1);
+	}
+	.chat-history .message {
+		font-size: var(--font-size-mobile-2);
+	}
+	.header {
+		min-height: 10%;
+		margin-bottom: 3rem;
+	}
+	.header > img {
+		width: 100%;
+		height: auto;
+		margin-top: 20px;
+	}
+	.typing-form {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.typing-form .input-wrapper {
+		width: 90vw;
+		margin: 0 auto;
+		flex-direction: column;
+	}
+	.typing-form .typing-input {
+		margin: 0;
+	}
+	.chat-list {
+		width: 90vw;
+		height: 50%;
+	}
+	.chat-history:after {
+		height: 20%;
 	}
 }
