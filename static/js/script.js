@@ -105,8 +105,9 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 		let currentWordIndex = 0;
 		const typingInterval = setInterval(() => {
 			// Append each word to the text element with a space
-
-			element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
+			if (element) {
+				element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
+			}
 			// If all words are displayed
 			if (currentWordIndex === words.length) {
 				clearInterval(typingInterval);
@@ -119,12 +120,12 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 			document.querySelector(".text3").classList.remove("hidden");
 		}, 2000);
 	}
+	loadChatHistory();
 };
 
 // Fetch response from the API based on user message
 const generateAPIResponse = async incomingMessageDiv => {
 	const textElements = incomingMessageDiv.querySelectorAll(".text"); // Getting text element
-	loadChatHistory();
 	try {
 		// Send a POST request to the API with the user's message
 		const response = await fetch(API_URL + "/generate-nickname", {

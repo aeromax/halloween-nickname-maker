@@ -101,17 +101,20 @@ app.post("/generate-nickname", async (req, res) => {
 		const cleanResult = await isolateNickname(nickname);
 		const time = new Date();
 		// Append this interaction to the session history (if needed later for more context)
-		sessionHistory.push({
-			time: `${time}`,
-			msgID: `${currentSessionId}`,
-			user: {
-				costume: `${costume}`,
-				name: `${name}`,
-			},
-			model: {
-				result: `${cleanResult}`,
-			},
-		});
+		if (cleanResult) {
+			console.log(cleanResult);
+			sessionHistory.push({
+				time: `${time}`,
+				msgID: `${currentSessionId}`,
+				user: {
+					costume: `${costume}`,
+					name: `${name}`,
+				},
+				model: {
+					result: `${cleanResult}`,
+				},
+			});
+		}
 
 		res.status(200).json({nickname});
 		writeToLog(sessionHistory);
