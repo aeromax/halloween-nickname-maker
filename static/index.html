@@ -10,6 +10,30 @@
 		<link rel="stylesheet" href="/css/style.css" />
 	</head>
 	<body>
+		<!-- <div class="blob1"></div> -->
+		<div class="drip-wrapper">
+			<div class="drip-top"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="cdrip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip"></div>
+			<div class="drip-bottom"></div>
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+				<defs>
+					<filter id="goo">
+						<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+						<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+						<feBlend in="SourceGraphic" in2="goo" />
+					</filter>
+				</defs>
+			</svg>
+		</div>
 		<div class="wrapper">
 			<header class="header">
 				<img src="/img/zombiebrook.png" alt="" />
@@ -85,5 +109,6 @@ c7.636,0,15.336,1.684,22.887,5.004c26.766,11.771,29.011,39.047,29.027,39.251V121
 			</div>
 		</div>
 		<script src="/js/script.js"></script>
+		<script src="/js/slime.js"></script>
 	</body>
 </html>
