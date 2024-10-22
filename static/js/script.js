@@ -5,6 +5,7 @@ const deleteChatButton = document.querySelector("#delete-chat-button");
 const submitButton = document.querySelector("#send-message-button");
 const nameField = document.querySelector("#nameField");
 const costumeField = document.querySelector("#costumeField");
+const mouth = document.querySelector(".mouth");
 let firstName;
 let costume;
 let sessionHistory = [];
@@ -102,16 +103,16 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 		const words = textParts[i] || ""; // Use the correct part for each element
 		const element = textElements[i];
 		let currentWordIndex = 0;
-
 		const typingInterval = setInterval(() => {
 			// Append each word to the text element with a space
-			element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
 
+			element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
 			// If all words are displayed
 			if (currentWordIndex === words.length) {
 				clearInterval(typingInterval);
 				isResponseGenerating = false;
 			}
+
 			// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 		}, 75);
 		setTimeout(() => {
@@ -207,3 +208,22 @@ typingForm.addEventListener("submit", e => {
 });
 
 loadChatHistory();
+
+// const mouthClose = () => {
+// 	let random = Math.floor(Math.random() * 300);
+// 	mouth.classList.remove("open");
+// 	setInterval(random => {
+// 		mouthOpen(random);
+// 	}, random);
+// };
+// const mouthOpen = function (stop) {
+// 	let random = Math.floor(Math.random() * 300);
+// 	mouth.classList.add("open");
+
+// 	const timer = setInterval(stop => {
+// 		mouthClose();
+// 		if (stop) {
+// 			clearInterval(timer);
+// 		}
+// 	}, random);
+// };
