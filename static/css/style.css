@@ -597,7 +597,7 @@ body.hide-header .header {
 		display: none;
 	}
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
 	.chat-list .message .message-content .text1,
 	.chat-list .message .message-content .text2 {
 		font-size: var(--font-size-mobile-2);
@@ -631,7 +631,7 @@ body.hide-header .header {
 	}
 	.chat-list {
 		width: 90vw;
-		height: 50%;
+		height: 25%;
 	}
 	.chat-history:after {
 		height: 20%;
