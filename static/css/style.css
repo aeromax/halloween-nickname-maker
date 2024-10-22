@@ -66,12 +66,12 @@ body:after {
 	margin: 0 auto;
 }
 .typing-area {
-	height: 20%;
+	height: 30%;
 	width: 100%;
 	left: 0;
 }
 .chat-history {
-	height: 75%;
+	height: 65%;
 	scrollbar-color: #999 transparent;
 	margin: 0 auto;
 	overflow: -moz-scrollbars-vertical;
@@ -94,7 +94,9 @@ body:after {
 }
 .chat-history .message {
 	color: var(--primary-color-accent);
-	font-size: var(--font-size-3);
+	font-size: var(--font-size-1);
+	font-weight: bold;
+	opacity: 0.5;
 	display: flex;
 	padding: 0.5rem 0;
 	flex-direction: row;
@@ -240,23 +242,26 @@ body.hide-header .header {
 
 .typing-form {
 	height: auto;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 .typing-form .input-wrapper {
-	width: 50%;
+	width: 80%;
 	display: flex;
 	position: relative;
-	flex-direction: column;
+	flex-direction: row;
 	gap: 1rem;
 }
 
 .typing-form .typing-input {
 	width: 100%;
-	border: none;
+	border: 1px solid var(--placeholder-color);
 	outline: none;
 	resize: none;
-	font-size: var(--font-size-3);
+	font-size: var(--font-size-4);
 	color: var(--text-color);
-	padding: 1.1rem 4rem 1.1rem 1.5rem;
+	padding: 1.1rem 1.5rem 1.1rem 1.5rem;
 	border-radius: 100px;
 	background: var(--secondary-color);
 	text-align: center;
@@ -291,17 +296,27 @@ body.hide-header .header {
 }
 
 .typing-form #send-message-button {
-	position: absolute;
-	right: 0;
 	outline: none;
-	border: none;
-	transform: scale(0);
-	background: transparent;
-	transition: transform 0.2s ease;
+	border: 1px solid var(--placeholder-color);
+	font-size: var(--font-size-3);
+	color: var(--text-color);
+	border-radius: 50px;
+	padding: 10px 20px;
+	background-color: var(--secondary-color);
+	transition: all 0.2s ease;
+	width: 4rem;
+	height: 4rem;
+	opacity: 0.3;
 }
-
-.typing-form .typing-field:valid ~ #send-message-button {
-	transform: scale(1);
+.input-wrapper:has(#nameField:valid + #costumeField:valid) ~ #send-message-button:hover {
+	background-color: var(--secondary-hover-color);
+}
+#send-message-button:active {
+	background-color: var(--highlight-color);
+}
+.input-wrapper:has(#nameField:valid + #costumeField:valid) ~ #send-message-button {
+	transition: all 0.2s ease;
+	opacity: 1;
 }
 
 .typing-area .disclaimer-text {
