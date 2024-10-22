@@ -24,12 +24,19 @@ div {
 	--font-size-3: 1.25rem;
 	--font-size-4: 1rem;
 	--font-size-5: 0.85rem;
+	--font-size-mobile-1: 2rem;
+	--font-size-mobile-2: 1.2rem;
+	--font-size-mobile-3: 1rem;
+	--font-size-mobile-4: 0.75rem;
+	--font-size-mobile-5: 0.5rem;
 }
 
 body {
 	background: var(--primary-color);
 	color: #ffffff;
 	height: 100vh;
+	overscroll-behavior: none;
+	overflow: scroll;
 }
 body:after {
 	z-index: -99;
@@ -52,51 +59,49 @@ body:after {
 	gap: 1rem;
 	margin: 0 auto;
 	height: 100%;
-	overflow: hidden;
+	overflow: scroll;
 }
 .header {
-	min-height: 10rem;
-	height: 25%;
-	overflow-x: hidden;
+	min-height: 20%;
+	margin-top: 1rem;
+	overflow: none;
 	text-align: center;
 }
 .chat-list {
-	height: 30%;
+	min-height: 25%;
 	width: 70%;
 	margin: 0 auto;
 }
 .typing-area {
-	height: 30%;
 	width: 100%;
 	left: 0;
 }
 .chat-history {
-	height: 65%;
+	flex-grow: 1;
 	scrollbar-color: #999 transparent;
 	margin: 0 auto;
-	overflow: -moz-scrollbars-vertical;
 	width: 100%;
-	overflow-y: scroll;
-	/* bottom: 0; */
+	scroll-behavior: smooth;
+	overflow: scroll;
 	background: linear-gradient(0deg, rgba(17, 17, 17, 0.3) 0%, rgba(47, 25, 95, 0) 100%);
 }
 
 .chat-history:after {
 	content: " ";
 	display: block;
-	position: absolute;
+	position: fixed;
 	left: 0;
 	bottom: 0;
 	width: 100%;
-	height: 20%;
+	height: 40%;
 	background: linear-gradient(0deg, rgba(17, 17, 17, 0.9) 0%, rgba(47, 25, 95, 0) 100%);
-	cursor: all-scroll;
+	pointer-events: none;
 }
 .chat-history .message {
 	color: var(--primary-color-accent);
-	font-size: var(--font-size-1);
+	font-size: var(--font-size-2);
 	font-weight: bold;
-	opacity: 0.5;
+	opacity: 0.6;
 	display: flex;
 	padding: 0.5rem 0;
 	flex-direction: row;
@@ -118,7 +123,8 @@ body:after {
 .header,
 .chat-list .message,
 .typing-form {
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 	max-width: 980px;
 	width: 100vw;
 }
@@ -341,11 +347,9 @@ body.hide-header .header {
 	left: 90px;
 	margin-left: -64.5px;
 	margin-top: -85.5px;
-}
-
-.ghost {
 	animation: float 3s ease-out infinite;
 }
+
 .ghost-line {
 	position: relative;
 	height: 1px;
@@ -363,7 +367,6 @@ body.hide-header .header {
 	left: 45px;
 	transform: scale(1, 0.5);
 	transition: 0.25s ease;
-	animation: float 3s ease-out infinite;
 	z-index: 99;
 }
 .open {
@@ -405,6 +408,20 @@ body.hide-header .header {
 }
 
 @media screen and (max-width: 400px) {
+	.chat-list .message .message-content .text1,
+	.chat-list .message .message-content .text2 {
+		font-size: var(--font-size-mobile-2);
+	}
+	.chat-list .message .message-content .text3 {
+		font-size: var(--font-size-mobile-1);
+	}
+	.chat-history .message {
+		font-size: var(--font-size-mobile-2);
+	}
+	.header {
+		min-height: 10%;
+		margin-bottom: 3rem;
+	}
 	.header > img {
 		width: 90vw;
 		height: auto;
@@ -413,9 +430,14 @@ body.hide-header .header {
 	.ghost-container {
 		display: none;
 	}
+	.typing-form {
+		flex-direction: column;
+		gap: 1rem;
+	}
 	.typing-form .input-wrapper {
 		width: 90vw;
 		margin: 0 auto;
+		flex-direction: column;
 	}
 	.typing-form .typing-input {
 		margin: 0;
@@ -423,5 +445,8 @@ body.hide-header .header {
 	.chat-list {
 		width: 90vw;
 		height: 50%;
+	}
+	.chat-history:after {
+		height: 20%;
 	}
 }
