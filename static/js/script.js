@@ -1,11 +1,12 @@
 const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-history");
 const incomingChat = document.querySelector(".chat-list");
-const deleteChatButton = document.querySelector("#delete-chat-button");
+const deleteChatButton = document.querySelector(".ghost");
 const submitButton = document.querySelector("#send-message-button");
 const nameField = document.querySelector("#nameField");
 const costumeField = document.querySelector("#costumeField");
 const mouth = document.querySelector(".mouth");
+const ghostLineDiv = document.querySelector(".ghost-line");
 let firstName;
 let costume;
 let sessionHistory = [];
@@ -97,6 +98,7 @@ const createMessageElement = (content, ...classes) => {
 
 // Show typing effect by displaying words one by one
 const showTypingEffect = (text, textElements, incomingMessageDiv) => {
+	ghostLineDiv.classList.remove("hidden");
 	const splitText = splitTextByAsterisk(text);
 	const textParts = [splitText.before.split(" "), [isolateNickname(text)]];
 	for (let i = 0; i < textElements.length; i++) {
@@ -105,9 +107,7 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 		let currentWordIndex = 0;
 		const typingInterval = setInterval(() => {
 			// Append each word to the text element with a space
-			if (element) {
-				element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
-			}
+			element.innerText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex++];
 			// If all words are displayed
 			if (currentWordIndex === words.length) {
 				clearInterval(typingInterval);
@@ -117,7 +117,12 @@ const showTypingEffect = (text, textElements, incomingMessageDiv) => {
 			// chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
 		}, 75);
 		setTimeout(() => {
-			document.querySelector(".text3").classList.remove("hidden");
+			const nicknameDiv = document.querySelector(".text3");
+			if (nicknameDiv.textContent === "null") {
+				return;
+			}
+			ghostLineDiv.classList.add("hidden");
+			nicknameDiv.classList.remove("hidden");
 		}, 2000);
 	}
 	loadChatHistory();
